@@ -24,7 +24,7 @@
         <item>United States</item>
         <item>Indonesia</item>
     </string-array>
-    <string name="gradsemster_prompt">Choose</string>
+    <string name="gradsemester_prompt">Choose</string>
     <!--Grad year-->
     <string-array name="gradyear">
         <item>2017</item>
@@ -34,4 +34,6 @@
     <!--Radio buttons-->
     <string name="radio_yes">Yes</string>
     <string name="radio_no">No</string>
+    <string name="radio_fulltime">Full-Time</string>
+    <string name="radio_parttime">Part-Time</string>
 </resources>

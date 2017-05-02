@@ -60,13 +60,13 @@
                 android:layout_marginTop="16dp"
                 android:textColor="#372c24"
                 android:text="Status"/>
-            <EditText android:id="@+id/nav_status"
-                android:layout_width="fill_parent"
+            <TextView android:layout_width="fill_parent"
+                android:id="@+id/nav_status"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:inputType="none"
-                android:singleLine="true"
-                android:layout_marginBottom="20dip"/>
+                android:layout_marginTop="16dp"
+                android:textColor="#372c24"
+                android:text=""/>
+
         </LinearLayout>
         <!-- Registration Form Ends -->
     </RelativeLayout>
