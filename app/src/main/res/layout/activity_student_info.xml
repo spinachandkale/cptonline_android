@@ -33,7 +33,7 @@
         <!--android:background="@layout/footer_repeat"-->
         <!-- Footer Ends -->
 
-        <!-- Registration Form -->
+
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
@@ -41,6 +41,11 @@
             android:layout_height="wrap_content"
             android:padding="10dip"
             android:layout_below="@id/header">
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:textStyle="bold"
+                android:text="STUDENT INFORMATION"/>
             <!-- Full Name Label -->
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -222,28 +227,263 @@
                     android:text="@string/radio_no" />
             </RadioGroup>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:textStyle="bold"
                 android:layout_marginTop="10dip"
-                android:layout_marginBottom="20dip"
-                android:layout_gravity="right"
-                >
-                <!-- Register Button -->
-                <Button android:id="@+id/btnEdit"
+                android:layout_marginBottom="10dip"
+                android:text="DEPARTMENT INFORMATION ON CPT"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Type of CPT"/>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_cpt_type"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip">
+                <RadioButton
+                    android:id="@+id/info_cpt_type_fulltime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-                    android:text="Edit"/>
-                <Button android:id="@+id/btnContinue"
+                    android:text="@string/radio_fulltime"
+                    android:checked="true" />
+                <RadioButton
+                    android:id="@+id/info_cpt_type_parttime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dip"
-                    android:layout_marginLeft="10dip"
-                    android:text="Continue"/>
-            </LinearLayout>
+                    android:text="@string/radio_parttime" />
+            </RadioGroup>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Course instructor"/>
+            <EditText android:id="@+id/info_cpt_instructor"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Number of credit hours per week"/>
+            <EditText android:id="@+id/info_cpt_credithours"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:inputType="number"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:textStyle="italic"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:text="Note: below details should be as per offer letter"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="CPT enrollment semester"/>
+            <Spinner
+                android:id="@+id/info_cpt_semester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/gradsemester"
+                android:prompt="@string/gradsemester_prompt"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="20dip"/>
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="CPT enrollment year"/>
+            <Spinner
+                android:id="@+id/info_cpt_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/gradyear"
+                android:prompt="@string/gradyear_prompt"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="CPT employment start date"/>
+            <EditText android:id="@+id/info_cpt_startdate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:inputType="date"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="CPT employment end date"/>
+            <EditText android:id="@+id/info_cpt_enddate"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:inputType="date"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Job title"/>
+            <EditText android:id="@+id/info_cpt_jobtitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Job description"/>
+            <EditText android:id="@+id/info_cpt_jobdescription"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:textStyle="bold"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:text="INTERNSHIP COMPANY INFORMATION"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Company name"/>
+            <EditText android:id="@+id/info_company_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Address line1"/>
+            <EditText android:id="@+id/info_company_addressline1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Address line2"/>
+            <EditText android:id="@+id/info_company_addressline2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="City"/>
+            <EditText android:id="@+id/info_company_city"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="State"/>
+            <EditText android:id="@+id/info_company_state"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Zip"/>
+            <EditText android:id="@+id/info_company_zip"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Supervisor name"/>
+            <EditText android:id="@+id/info_company_supervisorname"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Supervisor title"/>
+            <EditText android:id="@+id/info_company_supervisortitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Supervisor email"/>
+            <EditText android:id="@+id/info_company_supervisoremail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <TextView android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#372c24"
+                android:text="Supervisor phone"/>
+            <EditText android:id="@+id/info_company_supervisorphone"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="20dip"/>
+
+            <Button android:id="@+id/btnEditStudentInfo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:text="Edit" />
         </LinearLayout>
         <!-- Registration Form Ends -->
     </RelativeLayout>
