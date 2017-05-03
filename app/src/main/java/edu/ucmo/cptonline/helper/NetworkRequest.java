@@ -5,7 +5,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 
+import edu.ucmo.cptonline.datasource.Applications;
 import edu.ucmo.cptonline.datasource.Logins;
+import edu.ucmo.cptonline.datasource.Students;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -92,13 +94,169 @@ public class NetworkRequest {
         }
         return true;
     }
+
+    public Boolean postStudent(Students student) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(student);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8761/students")
+                .post(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public Boolean putStudent(Students student) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(student);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8761/students")
+                .put(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean postApplication(Applications application) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(application);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8761/applications")
+                .post(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public Boolean putApplication(Applications application) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(application);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8761/applications")
+                .put(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public Boolean getRequestDefault() {
         Boolean ret = Boolean.TRUE;
         Request request = new Request.Builder()
                 .url(URL)
                 .build();
         OkHttpClient httpclient = new OkHttpClient();
-        String jsonInString;
         httpclient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

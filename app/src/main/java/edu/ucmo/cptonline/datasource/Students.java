@@ -1,6 +1,6 @@
 package edu.ucmo.cptonline.datasource;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by avina on 5/1/2017.

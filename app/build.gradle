@@ -34,6 +34,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs', module: 'jsr305'
     })
 
     compile 'com.android.support:appcompat-v7:25.3.1'
@@ -42,5 +43,10 @@ dependencies {
     compile 'org.mindrot:jbcrypt:0.3m'
     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.openhtmltopdf:openhtmltopdf-core:0.0.1-RC10'
+    compile 'com.openhtmltopdf:openhtmltopdf-pdfbox:0.0.1-RC10'
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.oauth-client:google-oauth-client-jetty:1.22.0'
+    compile 'com.google.apis:google-api-services-drive:v3-rev68-1.22.0'
     testCompile 'junit:junit:4.12'
 }

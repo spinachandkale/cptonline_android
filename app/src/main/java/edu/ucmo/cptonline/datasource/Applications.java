@@ -1,6 +1,6 @@
 package edu.ucmo.cptonline.datasource;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by avina on 5/1/2017.
@@ -10,7 +10,7 @@ public class Applications {
 
     private Long id;
 
-    private Integer studentid;
+    private Long studentid;
 
     private String name;
 
@@ -27,11 +27,11 @@ public class Applications {
         this.id = id;
     }
 
-    public Integer getStudentid() {
+    public Long getStudentid() {
         return studentid;
     }
 
-    public void setStudentid(Integer studentid) {
+    public void setStudentid(Long studentid) {
         this.studentid = studentid;
     }
 

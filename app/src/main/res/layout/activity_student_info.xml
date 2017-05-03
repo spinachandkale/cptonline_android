@@ -36,6 +36,7 @@
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/info_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,30 +141,8 @@
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
-                android:text="City"/>
-            <EditText android:id="@+id/info_student_city"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"/>
-
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="State"/>
-            <EditText android:id="@+id/info_student_state"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"/>
-
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Zip"/>
-            <EditText android:id="@+id/info_student_zip"
+                android:text="City, State, Zip"/>
+            <EditText android:id="@+id/info_student_citystatezip"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -383,7 +362,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
                 android:text="Address line1"/>
-            <EditText android:id="@+id/info_company_addressline1"
+            <EditText android:id="@+id/info_company_addressline"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -393,8 +372,8 @@
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
-                android:text="Address line2"/>
-            <EditText android:id="@+id/info_company_addressline2"
+                android:text="City, State, Zip"/>
+            <EditText android:id="@+id/info_company_citystatezip"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
@@ -404,52 +383,8 @@
             <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
-                android:text="City"/>
-            <EditText android:id="@+id/info_company_city"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"/>
-
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="State"/>
-            <EditText android:id="@+id/info_company_state"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"/>
-
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Zip"/>
-            <EditText android:id="@+id/info_company_zip"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"/>
-
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Supervisor name"/>
-            <EditText android:id="@+id/info_company_supervisorname"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"/>
-
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Supervisor title"/>
-            <EditText android:id="@+id/info_company_supervisortitle"
+                android:text="Supervisor name, title"/>
+            <EditText android:id="@+id/info_company_supervisornametitle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
