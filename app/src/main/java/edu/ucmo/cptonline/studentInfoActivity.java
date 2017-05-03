@@ -344,7 +344,9 @@ public class studentInfoActivity extends AppCompatActivity {
     }
 
     private Boolean saveStudentUploadDetails(Students student) {
-        student.setDirectorylink(directoryLink);
+        if(student.getDirectorylink().equals("")) {
+            student.setDirectorylink(directoryLink);
+        }
         student.setInternshipform(pdfFile);
         NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students");
         nr.putStudent(student);

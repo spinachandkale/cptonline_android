@@ -26,7 +26,8 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".StudentNavigationActivity" />
-        <activity android:name=".studentInfoActivity"></activity>
+        <activity android:name=".studentInfoActivity" />
+        <activity android:name=".UploadFilesActivity"></activity>
     </application>
 
 </manifest>

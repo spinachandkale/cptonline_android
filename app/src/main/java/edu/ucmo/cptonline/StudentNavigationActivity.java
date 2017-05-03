@@ -63,6 +63,10 @@ public class StudentNavigationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        if (studentId != 0) {
+            saveToSharedPreferences("studentId", String.valueOf(studentId));
+        }
+
         // Add action listeners for buttons
 
         btnFileApplication.setOnClickListener(new View.OnClickListener() {
@@ -87,5 +91,12 @@ public class StudentNavigationActivity extends AppCompatActivity {
 
     void proceedToUploadfiles() {
 
+    }
+
+    public void saveToSharedPreferences(String key, String value) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 }
