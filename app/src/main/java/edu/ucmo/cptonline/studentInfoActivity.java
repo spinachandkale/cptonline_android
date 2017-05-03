@@ -347,11 +347,7 @@ public class studentInfoActivity extends AppCompatActivity {
         student.setDirectorylink(directoryLink);
         student.setInternshipform(pdfFile);
         NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students");
-        if (newApplication) {
-            nr.postStudent(student);
-        } else {
-            nr.putStudent(student);
-        }
+        nr.putStudent(student);
         nr.waitForResult();
         String response = nr.getResponse();
         return !(response.equals("error"));
