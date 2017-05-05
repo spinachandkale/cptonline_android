@@ -133,8 +133,8 @@ public class PdfHelper {
 
     }
 
-    public String createPdf() {
-        String filename = "application" + getDateTime();
+    public Boolean createPdf(String filename ) {
+        Boolean ret = Boolean.FALSE;
         updateHtmlContent();
         FileOutputStream outputStream = null;
         try {
@@ -150,11 +150,12 @@ public class PdfHelper {
         } finally {
             try {
                 outputStream.close();
+                ret = Boolean.TRUE;
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        return filename;
+        return ret;
     }
 
     private void updateHtmlContent() {

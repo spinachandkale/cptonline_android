@@ -2,6 +2,8 @@ package edu.ucmo.cptonline;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,18 +18,25 @@ import android.widget.Toast;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import edu.ucmo.cptonline.datasource.Applications;
+import edu.ucmo.cptonline.datasource.DriveShareRequest;
+import edu.ucmo.cptonline.datasource.DriveUploadRequest;
+import edu.ucmo.cptonline.datasource.Notifications;
 import edu.ucmo.cptonline.datasource.Students;
 import edu.ucmo.cptonline.helper.GoogleDriveHelper;
 import edu.ucmo.cptonline.helper.NetworkRequest;
 import edu.ucmo.cptonline.helper.PdfHelper;
+import edu.ucmo.cptonline.helper.UploadHelper;
 
 public class studentInfoActivity extends AppCompatActivity {
 
@@ -35,6 +44,7 @@ public class studentInfoActivity extends AppCompatActivity {
     private Boolean newApplication;
     private String pdfFile;
     private String directoryLink;
+    private Students studentInDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +81,8 @@ public class studentInfoActivity extends AppCompatActivity {
             students = mapper.readValue(response, Students[].class);
             newApplication = (students.length == 0) ? Boolean.TRUE : Boolean.FALSE;
             if (students.length > 0) {
-                displayStudent(students[0]);
+                studentInDB = students[0];
+                displayStudent(studentInDB);
                 setupUI(findViewById(R.id.info_layout), false);
             }
         } catch (IOException e) {
@@ -205,7 +216,7 @@ public class studentInfoActivity extends AppCompatActivity {
 
     private void saveStudentDetails() {
 
-        Students student = new Students();
+        Students student = studentInDB;
 
         // Fill student information
 
@@ -302,8 +313,52 @@ public class studentInfoActivity extends AppCompatActivity {
 
         student.setCptsupervisorphno(((EditText)findViewById(R.id.info_company_supervisorphone)).getText().toString());
 
-        // Send save request to service
+        // create pdf and upload
 
+        String filename  = Environment.getExternalStorageDirectory() + "/cptonline/" + "application_" + getDateTime();
+        if (createPDF(student, filename)) {
+            if (!uploadFile(filename, Long.toString(student.getId()))) {
+                Toast.makeText(this, "unable to upload file to drive", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        if (student.getDirectorylink().isEmpty()) {
+            student.setDirectorylink(directoryLink);
+        }
+
+        File file = new File(filename);
+        student.setInternshipform(file.getName());
+
+        // Send save request to service
+        if (saveStudent(student)) {
+            Toast.makeText(getApplicationContext(), "Unable to save student application, processing error", Toast.LENGTH_LONG).show();
+        }
+        // Save Application
+        Date today = Calendar.getInstance().getTime();
+        Applications application = new Applications();
+        application.setStudentid(student.getId());
+        application.setName(student.getName());
+        application.setDateapplied(today);
+        if (!student.getInternshipform().isEmpty() && !student.getOfferletter().isEmpty()
+                && !student.getCentraldegree().isEmpty()
+                && !student.getDirectorylink().isEmpty()) {
+            if (shareDriveFolder()) {
+                application.setStatus("coordinator-verification-required");
+            } else {
+                application.setStatus("student-submission-in-progress");
+                Toast.makeText(this, "Unable to share folder in drive", Toast.LENGTH_LONG).show();
+            }
+        } else{
+            application.setStatus("student-submission-in-progress");
+        }
+        if (saveApplication(application)) {
+            Toast.makeText(this, "Application saved successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Unable to save application", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public Boolean saveStudent(Students student) {
         NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students");
         if (newApplication) {
             nr.postStudent(student);
@@ -312,23 +367,7 @@ public class studentInfoActivity extends AppCompatActivity {
         }
         nr.waitForResult();
         String response = nr.getResponse();
-
-        if(response.equals("error")) {
-            Toast.makeText(getApplicationContext(),"Unable to save student application, processing error", Toast.LENGTH_LONG).show();
-        } else {
-            // Save Application
-            Date today = Calendar.getInstance().getTime();
-            Applications application = new Applications();
-            application.setName(student.getName());
-            application.setDateapplied(today);
-            application.setStatus("student-submission-in-progress");
-            application.setStudentid(student.getId());
-            if (saveApplication(application) == Boolean.TRUE) {
-                pdfFile = createPDF(student);
-                uploadPDF(pdfFile, student.getId());
-                saveStudentUploadDetails(student);
-            }
-        }
+        return !(response.equals("error"));
     }
 
     public Boolean saveApplication(Applications application) {
@@ -343,42 +382,106 @@ public class studentInfoActivity extends AppCompatActivity {
         return !(response.equals("error"));
     }
 
-    private Boolean saveStudentUploadDetails(Students student) {
-        if(student.getDirectorylink().equals("")) {
-            student.setDirectorylink(directoryLink);
-        }
-        student.setInternshipform(pdfFile);
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students");
-        nr.putStudent(student);
-        nr.waitForResult();
-        String response = nr.getResponse();
-        return !(response.equals("error"));
-    }
-
     private void proceedToNavigationActivity() {
         Intent intent = new Intent(this, StudentNavigationActivity.class);
         startActivity(intent);
     }
 
-    private String createPDF(Students student) {
+    private Boolean createPDF(Students student, String filename) {
         PdfHelper pdfHelper = new PdfHelper(student);
-        return pdfHelper.createPdf();
+        return pdfHelper.createPdf(filename);
     }
+//
+//    private void uploadPDF(String pdffile, Long studentId) {
+//        InputStream in = getResources().openRawResource(getResources().getIdentifier("client_secret",
+//                "raw", getPackageName()));
+//        GoogleDriveHelper driveHelper = new GoogleDriveHelper(in);
+//        try {
+//            driveHelper.uploadFile(pdffile, Long.toString(studentId));
+//            directoryLink = driveHelper.getDirectoryLink();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    private void uploadPDF(String pdffile, Long studentId) {
-        GoogleDriveHelper driveHelper = new GoogleDriveHelper();
-        try {
-            driveHelper.uploadFile(pdffile, Long.toString(studentId));
-            directoryLink = driveHelper.getDirectoryLink();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private Boolean uploadFile(String filename, String studentId) {
+        Boolean ret = Boolean.FALSE;
+//        UploadHelper uh = new UploadHelper("http://35.188.97.91/cptuploads/postfile.php", filename, "application/pdf");
+        ArrayList<String> args = new ArrayList<>();
+        args.add("http://35.188.97.91/cptuploads/postfile.php");
+        args.add(filename);
+        args.add("application/pdf");
+        UploadHelper fileTransfer = new UploadHelper();
+        fileTransfer.execute(args);
+        while(fileTransfer.getStatus() != AsyncTask.Status.FINISHED) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        if(fileTransfer.getTaskResult() == 1) {
+            DriveUploadRequest request = new DriveUploadRequest();
+            File file = new File(filename);
+            request.setFilename(file.getName());
+            request.setStudentId(studentId);
+
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/");
+            nr.postDriveUpload(request);
+            nr.waitForResult();
+            String response = nr.getResponse();
+            if(response.equals("")) {
+                Toast.makeText(this, "Problems in uploading to drive", Toast.LENGTH_SHORT).show();
+            } else {
+                directoryLink = response;
+                ret = Boolean.TRUE;
+            }
+        }
+        return  ret;
     }
 
     private String getDateTime() {
         DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    private Boolean shareDriveFolder() {
+        DriveShareRequest request = new DriveShareRequest();
+        request.setEmail(getNotificationsEmail("coordinator-verification-required"));
+        request.setFileID(directoryLink);
+        request.setStudentID(getSharedPreferenceValue("studentId"));
+
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/share/");
+        nr.postDriveShare(request);
+        nr.waitForResult();
+        String response = nr.getResponse();
+        if (response.equals("success")) {
+            return Boolean.TRUE;
+        } else {
+            return Boolean.FALSE;
+        }
+    }
+
+    private String getNotificationsEmail(String status) {
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/notifications/"+status);
+        nr.getRequestDefault();
+        nr.waitForResult();
+        String response = nr.getResponse();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Notifications notification = null;
+        try {
+            notification = mapper.readValue(response, Notifications.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return notification.getEmail();
+    }
+
+    private String getSharedPreferenceValue(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return preferences.getString(key, null);
     }
 
 }

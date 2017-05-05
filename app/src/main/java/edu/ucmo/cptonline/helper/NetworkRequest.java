@@ -6,6 +6,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import java.io.IOException;
 
 import edu.ucmo.cptonline.datasource.Applications;
+import edu.ucmo.cptonline.datasource.DriveShareRequest;
+import edu.ucmo.cptonline.datasource.DriveUploadRequest;
 import edu.ucmo.cptonline.datasource.Logins;
 import edu.ucmo.cptonline.datasource.Students;
 import okhttp3.Call;
@@ -149,7 +151,7 @@ public class NetworkRequest {
         RequestBody body = RequestBody.create(JSON, jsonInString);
 //             Send in HTTP
         Request request = new Request.Builder()
-                .url("http://35.188.97.91:8761/students")
+                .url("http://35.188.97.91:8761/students/")
                 .put(body)
                 .build();
         OkHttpClient client = new OkHttpClient();
@@ -251,6 +253,84 @@ public class NetworkRequest {
         return true;
     }
 
+    public Boolean postDriveUpload(DriveUploadRequest requestData) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(requestData);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8759/uploads")
+                .post(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public Boolean postDriveShare(DriveShareRequest requestData) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(requestData);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8759/uploads")
+                .post(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     public Boolean getRequestDefault() {
         Boolean ret = Boolean.TRUE;
         Request request = new Request.Builder()
@@ -269,6 +349,7 @@ public class NetworkRequest {
         });
         return ret;
     }
+
     public void waitForResult() {
         while(response.equals("")) {
             try {

@@ -1,5 +1,7 @@
 package edu.ucmo.cptonline.helper;
 
+import android.os.Environment;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
@@ -15,10 +17,10 @@ import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.*;
 import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.model.File;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -28,32 +30,51 @@ import java.util.List;
  */
 
 public class GoogleDriveHelper {
-    private static final String APPLICATION_NAME =
-            "Drive API Java Quickstart";
+
+    private InputStream client_secret;
+
+    public GoogleDriveHelper(InputStream in) {
+        try {
+            DATA_STORE_DIR = Environment.getExternalStorageDirectory()
+                    + "/cptonline/" + "drive-java-quickstart";
+            java.io.File file = new java.io.File(DATA_STORE_DIR);
+            file.getParentFile().mkdirs();
+            file.createNewFile();
+            DATA_STORE_FACTORY = new FileDataStoreFactory(file);
+            JSON_FACTORY = JacksonFactory.getDefaultInstance();
+            SCOPES = Arrays.asList(DriveScopes.DRIVE_METADATA_READONLY);
+            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+            this.client_secret = in;
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /** Directory to store user credentials for this application. */
-    private static final java.io.File DATA_STORE_DIR = new java.io.File(
-            System.getProperty("user.home"), ".credentials/drive-java-quickstart");
+//    private static final java.io.File DATA_STORE_DIR = new java.io.File(
+//            System.getProperty("user.home"), ".credentials/drive-java-quickstart");
 
-    /** Global instance of the {@link FileDataStoreFactory}. */
-    private static FileDataStoreFactory DATA_STORE_FACTORY;
+    private String DATA_STORE_DIR;
+
+
+    private FileDataStoreFactory DATA_STORE_FACTORY;
 
     /** Global instance of the JSON factory. */
-    private static final JsonFactory JSON_FACTORY =
-            JacksonFactory.getDefaultInstance();
+    private JsonFactory JSON_FACTORY;
 
     /** Global instance of the HTTP transport. */
-    private static HttpTransport HTTP_TRANSPORT;
+    private HttpTransport HTTP_TRANSPORT;
 
     /** Global instance of the scopes required by this quickstart.
      *
      * If modifying these scopes, delete your previously saved credentials
      * at ~/.credentials/drive-java-quickstart
      */
-    private static final List<String> SCOPES =
-            Arrays.asList(DriveScopes.DRIVE_METADATA_READONLY);
-
+    private List<String> SCOPES;
     private Drive service;
+
     private String directoryLink;
 
     public String getDirectoryLink() {
@@ -64,35 +85,11 @@ public class GoogleDriveHelper {
         this.directoryLink = directoryLink;
     }
 
-    static {
-        try {
-            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-            DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-        } catch (Throwable t) {
-            t.printStackTrace();
-            System.exit(1);
-        }
-    }
-
-    public GoogleDriveHelper() {
-        try {
-            service = getDriveService();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Creates an authorized Credential object.
-     * @return an authorized Credential object.
-     * @throws IOException
-     */
-    public static Credential authorize() throws IOException {
+    private Credential authorize() throws IOException {
         // Load client secrets.
-        InputStream in =
-                GoogleDriveHelper.class.getResourceAsStream("/client_secret.json");
+
         GoogleClientSecrets clientSecrets =
-                GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+                GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(client_secret));
 
         // Build flow and trigger user authorization request.
         GoogleAuthorizationCodeFlow flow =
@@ -103,32 +100,27 @@ public class GoogleDriveHelper {
                         .build();
         Credential credential = new AuthorizationCodeInstalledApp(
                 flow, new LocalServerReceiver()).authorize("user");
-        System.out.println(
-                "Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
         return credential;
     }
 
-    /**
-     * Build and return an authorized Drive client service.
-     * @return an authorized Drive client service
-     * @throws IOException
-     */
-    public static Drive getDriveService() throws IOException {
+
+    private Drive getDriveService() throws IOException {
         Credential credential = authorize();
         return new Drive.Builder(
                 HTTP_TRANSPORT, JSON_FACTORY, credential)
-                .setApplicationName(APPLICATION_NAME)
+                .setApplicationName("cptonline")
                 .build();
     }
 
     public void uploadFile(String filename, String studentId) throws IOException {
         // Build a new authorized API client service.
+
         String folderID = "";
+
+        service = getDriveService();
 
         if (service == null) return;
 
-        // Print the names and IDs for up to 10 files.
-//             .setPageSize(10)
         FileList result = service.files().list()
                 .setQ("mimeType='application/vnd.google-apps.folder'")
                 .setQ("'0B46iJvBr8M_7cGR6c2ZZMVBjQTQ' in parents")
@@ -137,7 +129,6 @@ public class GoogleDriveHelper {
         List<File> files = result.getFiles();
         if (files == null || files.size() == 0) {
         } else {
-            System.out.println("Files:");
             for (File file : files) {
                 if (file.getName().equals(studentId)) {
                     folderID = file.getId();

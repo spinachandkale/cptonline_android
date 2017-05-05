@@ -90,7 +90,8 @@ public class StudentNavigationActivity extends AppCompatActivity {
     }
 
     void proceedToUploadfiles() {
-
+        Intent intent = new Intent(this, UploadFilesActivity.class);
+        startActivity(intent);
     }
 
     public void saveToSharedPreferences(String key, String value) {
