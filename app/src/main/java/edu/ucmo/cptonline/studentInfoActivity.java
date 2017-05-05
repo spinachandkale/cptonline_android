@@ -359,7 +359,7 @@ public class studentInfoActivity extends AppCompatActivity {
     }
 
     public Boolean saveStudent(Students student) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students");
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students/");
         if (newApplication) {
             nr.postStudent(student);
         } else {
@@ -371,7 +371,7 @@ public class studentInfoActivity extends AppCompatActivity {
     }
 
     public Boolean saveApplication(Applications application) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications");
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/");
         if (newApplication) {
             nr.postApplication(application);
         } else {
@@ -426,7 +426,7 @@ public class studentInfoActivity extends AppCompatActivity {
             request.setFilename(file.getName());
             request.setStudentId(studentId);
 
-            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/");
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads");
             nr.postDriveUpload(request);
             nr.waitForResult();
             String response = nr.getResponse();

@@ -112,7 +112,7 @@ public class NetworkRequest {
         RequestBody body = RequestBody.create(JSON, jsonInString);
 //             Send in HTTP
         Request request = new Request.Builder()
-                .url("http://35.188.97.91:8761/students")
+                .url("http://35.188.97.91:8761/students/")
                 .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient();
@@ -190,7 +190,7 @@ public class NetworkRequest {
         RequestBody body = RequestBody.create(JSON, jsonInString);
 //             Send in HTTP
         Request request = new Request.Builder()
-                .url("http://35.188.97.91:8761/applications")
+                .url("http://35.188.97.91:8761/applications/")
                 .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient();
@@ -229,7 +229,7 @@ public class NetworkRequest {
         RequestBody body = RequestBody.create(JSON, jsonInString);
 //             Send in HTTP
         Request request = new Request.Builder()
-                .url("http://35.188.97.91:8761/applications")
+                .url("http://35.188.97.91:8761/applications/")
                 .put(body)
                 .build();
         OkHttpClient client = new OkHttpClient();
@@ -307,7 +307,7 @@ public class NetworkRequest {
         RequestBody body = RequestBody.create(JSON, jsonInString);
 //             Send in HTTP
         Request request = new Request.Builder()
-                .url("http://35.188.97.91:8759/uploads")
+                .url("http://35.188.97.91:8759/uploads/share/")
                 .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient();

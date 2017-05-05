@@ -170,7 +170,7 @@ public class UploadFilesActivity extends AppCompatActivity {
             request.setFilename(file.getName());
             request.setStudentId(getSharedPreferenceValue("studentId"));
 
-            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/");
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads");
             nr.postDriveUpload(request);
             nr.waitForResult();
             String response = nr.getResponse();
@@ -227,7 +227,7 @@ public class UploadFilesActivity extends AppCompatActivity {
             if (student.getDirectorylink().equals("") && !directoryLink.equals("")) {
                 student.setDirectorylink(directoryLink);
             }
-            NetworkRequest nr1 = new NetworkRequest("http://35.188.97.91:8761/students");
+            NetworkRequest nr1 = new NetworkRequest("http://35.188.97.91:8761/students/");
             nr1.putStudent(student);
             nr1.waitForResult();
             String response1 = nr.getResponse();
@@ -301,7 +301,7 @@ public class UploadFilesActivity extends AppCompatActivity {
     }
 
     private Boolean saveApplication(Applications application) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications");
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/");
         nr.putApplication(application);
         nr.waitForResult();
         String response = nr.getResponse();
