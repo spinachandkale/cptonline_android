@@ -358,7 +358,7 @@ public class studentInfoActivity extends AppCompatActivity {
         student.setInternshipform(directoryLink);
 
         // Send save request to service
-        if (saveStudent(student)) {
+        if (!saveStudent(student)) {
             Toast.makeText(getApplicationContext(), "Unable to save student application, processing error", Toast.LENGTH_LONG).show();
         }
         // Save Application
@@ -403,6 +403,10 @@ public class studentInfoActivity extends AppCompatActivity {
         if (newApplication) {
             nr.postApplication(application);
         } else {
+            Applications existingApplication = getApplication(Long.toString(application.getStudentid()));
+            if (existingApplication != null) {
+                application.setId(existingApplication.getId());
+            }
             nr.putApplication(application);
         }
         nr.waitForResult();
@@ -510,6 +514,25 @@ public class studentInfoActivity extends AppCompatActivity {
     private String getSharedPreferenceValue(String key) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         return preferences.getString(key, null);
+    }
+
+    private Applications getApplication(String studentId) {
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/"+studentId);
+        nr.getRequestDefault();
+        nr.waitForResult();
+        String response = nr.getResponse();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Applications[] applications;
+        try {
+            applications = mapper.readValue(response, Applications[].class);
+            if (applications.length > 0) {
+                return applications[0];
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
