@@ -20,9 +20,9 @@
     <string name="url_post_login">http://35.188.97.91:8760/logins</string>
     <!--Grad Semester-->
     <string-array name="gradsemester">
-        <item>Malaysia</item>
-        <item>United States</item>
-        <item>Indonesia</item>
+        <item>spring</item>
+        <item>summer</item>
+        <item>fall</item>
     </string-array>
     <string name="gradsemester_prompt">Choose</string>
     <!--Grad year-->

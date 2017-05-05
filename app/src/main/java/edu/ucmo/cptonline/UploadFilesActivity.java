@@ -231,7 +231,7 @@ public class UploadFilesActivity extends AppCompatActivity {
             NetworkRequest nr1 = new NetworkRequest("http://35.188.97.91:8761/students/");
             nr1.putStudent(student);
             nr1.waitForResult();
-            String response1 = nr.getResponse();
+            String response1 = nr1.getResponse();
             if(response1.equals("error")){
                 Toast.makeText(this, "Unable to save student details", Toast.LENGTH_SHORT).show();
             }

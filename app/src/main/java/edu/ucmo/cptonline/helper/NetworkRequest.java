@@ -9,6 +9,7 @@ import edu.ucmo.cptonline.datasource.Applications;
 import edu.ucmo.cptonline.datasource.DriveShareRequest;
 import edu.ucmo.cptonline.datasource.DriveUploadRequest;
 import edu.ucmo.cptonline.datasource.Logins;
+import edu.ucmo.cptonline.datasource.PdfRequest;
 import edu.ucmo.cptonline.datasource.Students;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -308,6 +309,46 @@ public class NetworkRequest {
 //             Send in HTTP
         Request request = new Request.Builder()
                 .url("http://35.188.97.91:8759/uploads/share/")
+                .post(body)
+                .build();
+        OkHttpClient client = new OkHttpClient();
+        try {
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    setResponse("error");
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String ret = response.body().string().toString();
+                    setResponse(ret);
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public Boolean postPdfUpload(PdfRequest requestData) {
+        Boolean ret = Boolean.TRUE;
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonInString = null;
+        try {
+            jsonInString = mapper.writeValueAsString(requestData);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, jsonInString);
+//             Send in HTTP
+//                .url("http://153.91.241.171:8759/uploads/pdf")
+        Request request = new Request.Builder()
+                .url("http://35.188.97.91:8759/uploads/pdf")
                 .post(body)
                 .build();
         OkHttpClient client = new OkHttpClient();

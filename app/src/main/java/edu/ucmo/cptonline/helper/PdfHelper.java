@@ -1,6 +1,7 @@
 package edu.ucmo.cptonline.helper;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 
@@ -12,6 +13,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import edu.ucmo.cptonline.datasource.PdfRequest;
 import edu.ucmo.cptonline.datasource.Students;
 
 /**
@@ -133,29 +135,41 @@ public class PdfHelper {
 
     }
 
-    public Boolean createPdf(String filename ) {
-        Boolean ret = Boolean.FALSE;
+    public String createPdf() {
+        String directoryLink = "";
         updateHtmlContent();
-        FileOutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(filename);
-            PdfRendererBuilder builder = new PdfRendererBuilder();
-            builder.withHtmlContent(htmlContent, "/");
-            builder.toStream(outputStream);
-            builder.run();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                outputStream.close();
-                ret = Boolean.TRUE;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/pdf");
+//        NetworkRequest nr = new NetworkRequest("http://153.91.241.171:8759/uploads/pdf");
+        PdfRequest request = new PdfRequest();
+        request.setStudentId(Long.toString(student.getId()));
+        request.setHtmlContent(htmlContent);
+        nr.postPdfUpload(request);
+        nr.waitForResult();
+        String response = nr.getResponse();
+        if(response.equals("")) {
+        } else {
+            directoryLink = response;
         }
-        return ret;
+        return directoryLink;
+
+
+//        FileOutputStream outputStream = null;
+//        try {
+//            outputStream = new FileOutputStream(filename);
+//            PdfRendererBuilder builder = new PdfRendererBuilder();
+//            builder.withHtmlContent(htmlContent, "/");
+//            builder.toStream(outputStream);
+//            builder.run();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                outputStream.close();
+//                ret = Boolean.TRUE;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     private void updateHtmlContent() {

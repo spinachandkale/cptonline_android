@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.KeyListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -55,10 +56,10 @@ public class studentInfoActivity extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (((Button)v).getText() == "Edit") {
+                if (((Button)v).getText().equals("Edit")) {
                     setupUI((View)findViewById(R.id.info_layout), true);
                     ((Button)v).setText("Save");
-                } else if(((Button)v).getText() == "Save"){
+                } else if(((Button)v).getText().equals("Save")){
                     saveStudentDetails();
                     proceedToNavigationActivity();
                 }
@@ -93,17 +94,27 @@ public class studentInfoActivity extends AppCompatActivity {
     private void setupUI(View view, boolean editable) {
 
         if (view instanceof EditText) {
-            ((EditText)view).setFocusable(editable);
+//            ((EditText)view).setFocusable(editable);
+//            ((EditText)view).setEnabled(editable);
+            if (editable) {
+                ((EditText)view).setKeyListener((KeyListener) view.getTag());
+            } else {
+                view.setTag(((EditText)view).getKeyListener());
+                ((EditText)view).setKeyListener(null);
+            }
             return;
         }
 
         if (view instanceof RadioButton) {
             ((RadioButton)view).setFocusable(editable);
+            ((RadioButton)view).setEnabled(editable);
             return;
         }
 
         if (view instanceof Spinner) {
             ((Spinner)view).setClickable(editable);
+            ((Spinner)view).setEnabled(editable);
+
             return;
         }
 
@@ -120,28 +131,29 @@ public class studentInfoActivity extends AppCompatActivity {
 
         // Student Info
 
-        ((EditText)findViewById(R.id.info_student_name)).setText(student.getName());
+        ((EditText)findViewById(R.id.info_student_name)).setText((student.getName() != null) ? student.getName() : "");
 
         ((EditText)findViewById(R.id.info_student_id)).setText(Long.toString(student.getId()));
 
-        ((EditText)findViewById(R.id.info_student_major)).setText(student.getMajor());
+        ((EditText)findViewById(R.id.info_student_major)).setText((student.getMajor() != null) ? student.getMajor() : "");
 
-        ((EditText)findViewById(R.id.info_student_gpa)).setText(student.getGpa());
+        ((EditText)findViewById(R.id.info_student_gpa)).setText((student.getGpa() != null) ? student.getGpa() : "");
 
-        ((EditText)findViewById(R.id.info_student_gpa)).setText(student.getGpa());
+        ((EditText)findViewById(R.id.info_student_gpa)).setText((student.getGpa() != null) ? student.getGpa() : "");
 
-        Spinner gradSemester = (Spinner)findViewById(R.id.info_student_gradsemester);
-        gradSemester.setSelection(getSpinnerIndex(gradSemester, student.getGradsemester()));
-
+        if (student.getGradsemester() != null) {
+            Spinner gradSemester = (Spinner) findViewById(R.id.info_student_gradsemester);
+            gradSemester.setSelection(getSpinnerIndex(gradSemester, student.getGradsemester()));
+        }
         Spinner gradYear = (Spinner) findViewById(R.id.info_student_gradyear);
         gradYear.setSelection(getSpinnerIndex(gradYear, Integer.toString(student.getGradyear())));
 
-        ((EditText)findViewById(R.id.info_student_addressline1)).setText(student.getStreet());
+        ((EditText)findViewById(R.id.info_student_addressline1)).setText((student.getStreet() != null) ? student.getStreet() : "");
 
-        ((EditText)findViewById(R.id.info_student_addressline2)).setText(student.getAptunitno());
+        ((EditText)findViewById(R.id.info_student_addressline2)).setText((student.getAptunitno() != null) ? student.getAptunitno() : "");
 
-        ((EditText)findViewById(R.id.info_student_citystatezip)).setText(student.getCitystatezip());
-        ((EditText)findViewById(R.id.info_student_phone)).setText(student.getPhonenumber());
+        ((EditText)findViewById(R.id.info_student_citystatezip)).setText((student.getCitystatezip() != null) ? student.getCitystatezip() : "");
+        ((EditText)findViewById(R.id.info_student_phone)).setText((student.getPhonenumber() != null) ? student.getPhonenumber() : "");
 
         RadioGroup rg = (RadioGroup) findViewById(R.id.info_student_ssn);
         if (student.getSsnrequired() == 1) {
@@ -160,43 +172,55 @@ public class studentInfoActivity extends AppCompatActivity {
         // CPT type information
 
         rg = ((RadioGroup)findViewById(R.id.info_cpt_type));
-        if (student.getCpttype().equals("Full time")) {
+        if (student.getCpttype() != null && student.getCpttype().equals("Full time")) {
             rg.check(R.id.info_cpt_type_fulltime);
-        } else {
+        } else if (student.getCpttype() != null && student.getCpttype().equals("Part time")){
             rg.check(R.id.info_cpt_type_parttime);
         }
 
-        ((EditText)findViewById(R.id.info_cpt_instructor)).setText(student.getCptcourseinstructor());
+        ((EditText)findViewById(R.id.info_cpt_instructor)).setText((student.getCptcourseinstructor() != null)
+                ? student.getCptcourseinstructor() : "");
 
-        ((EditText)findViewById(R.id.info_cpt_credithours)).setText(student.getCptsemestercredithours());
+        ((EditText)findViewById(R.id.info_cpt_credithours)).setText(Integer.toString(student.getCptsemestercredithours()));
 
-        Spinner cptSemester = (Spinner)findViewById(R.id.info_cpt_semester);
-        cptSemester.setSelection(getSpinnerIndex(gradSemester, student.getCptsemester()));
-
+        if (student.getCptsemester() != null) {
+            Spinner cptSemester = (Spinner) findViewById(R.id.info_cpt_semester);
+            cptSemester.setSelection(getSpinnerIndex(cptSemester, student.getCptsemester()));
+        }
         Spinner cptYear = (Spinner) findViewById(R.id.info_cpt_year);
-        cptYear.setSelection(getSpinnerIndex(gradYear, Integer.toString(student.getCptyear())));
+        cptYear.setSelection(getSpinnerIndex(cptYear, Integer.toString(student.getCptyear())));
 
-        ((EditText)findViewById(R.id.info_cpt_startdate)).setText(student.getCptstart().toString());
+        ((EditText)findViewById(R.id.info_cpt_startdate)).setText((student.getCptstart() != null)
+                ? student.getCptstart().toString() : "0000-00-00");
 
-        ((EditText)findViewById(R.id.info_cpt_enddate)).setText(student.getCptend().toString());
+        ((EditText)findViewById(R.id.info_cpt_enddate)).setText((student.getCptend() != null)
+                ? student.getCptend().toString() : "0000-00-00");
 
-        ((EditText)findViewById(R.id.info_cpt_jobtitle)).setText(student.getCptjobtitle());
+        ((EditText)findViewById(R.id.info_cpt_jobtitle)).setText((student.getCptjobtitle() != null)
+                ? student.getCptjobtitle() : "");
 
-        ((EditText)findViewById(R.id.info_cpt_jobdescription)).setText(student.getCptjobdescription());
+        ((EditText)findViewById(R.id.info_cpt_jobdescription)).setText((student.getCptjobdescription() != null)
+                ? student.getCptjobdescription() : "");
 
         // Company information
 
-        ((EditText)findViewById(R.id.info_company_name)).setText(student.getCptemployer());
+        ((EditText)findViewById(R.id.info_company_name)).setText((student.getCptemployer() != null)
+                ? student.getCptemployer() : "");
 
-        ((EditText)findViewById(R.id.info_company_addressline)).setText(student.getCptemployerstreet());
+        ((EditText)findViewById(R.id.info_company_addressline)).setText((student.getCptemployerstreet() != null)
+                ? student.getCptemployerstreet() : "");
 
-        ((EditText)findViewById(R.id.info_company_citystatezip)).setText(student.getCptemployercitystatezip());
+        ((EditText)findViewById(R.id.info_company_citystatezip)).setText((student.getCptemployercitystatezip() != null) ?
+                student.getCptemployercitystatezip() : "");
 
-        ((EditText)findViewById(R.id.info_company_supervisornametitle)).setText(student.getCptsupervisornametitle());
+        ((EditText)findViewById(R.id.info_company_supervisornametitle)).setText((student.getCptsupervisornametitle() != null)
+                ? student.getCptsupervisornametitle() : "");
 
-        ((EditText)findViewById(R.id.info_company_supervisoremail)).setText(student.getCptsupervisoremail());
+        ((EditText)findViewById(R.id.info_company_supervisoremail)).setText((student.getCptsupervisoremail() != null)
+                ? student.getCptsupervisoremail() : "");
 
-        ((EditText)findViewById(R.id.info_company_supervisorphone)).setText(student.getCptsupervisorphno());
+        ((EditText)findViewById(R.id.info_company_supervisorphone)).setText((student.getCptsupervisorphno() != null)
+                ? student.getCptsupervisorphno() : "");
 
     }
 
@@ -315,19 +339,23 @@ public class studentInfoActivity extends AppCompatActivity {
 
         // create pdf and upload
 
-        String filename  = Environment.getExternalStorageDirectory() + "/cptonline/" + "application_" + getDateTime();
-        if (createPDF(student, filename)) {
-            if (!uploadFile(filename, Long.toString(student.getId()))) {
-                Toast.makeText(this, "unable to upload file to drive", Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-        if (student.getDirectorylink().isEmpty()) {
+//        String filename  = Environment.getExternalStorageDirectory() + "/cptonline/" + "application_" + getDateTime() + ".pdf";
+//        if (createPDF(student)) {
+//            if (!uploadFile(filename, Long.toString(student.getId()))) {
+//                Toast.makeText(this, "unable to upload file to drive", Toast.LENGTH_LONG).show();
+//                return;
+//            }
+//        }
+
+        directoryLink = createPDF(student);
+
+
+        if (!directoryLink.isEmpty() && student.getDirectorylink() != null
+                && student.getDirectorylink().isEmpty()) {
             student.setDirectorylink(directoryLink);
         }
 
-        File file = new File(filename);
-        student.setInternshipform(file.getName());
+        student.setInternshipform(directoryLink);
 
         // Send save request to service
         if (saveStudent(student)) {
@@ -387,9 +415,9 @@ public class studentInfoActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private Boolean createPDF(Students student, String filename) {
+    private String createPDF(Students student) {
         PdfHelper pdfHelper = new PdfHelper(student);
-        return pdfHelper.createPdf(filename);
+        return pdfHelper.createPdf();
     }
 //
 //    private void uploadPDF(String pdffile, Long studentId) {

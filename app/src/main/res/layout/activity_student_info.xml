@@ -257,7 +257,6 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:layout_marginTop="5dip"
-                android:inputType="number"
                 android:layout_marginBottom="20dip"/>
 
             <TextView android:layout_width="fill_parent"
