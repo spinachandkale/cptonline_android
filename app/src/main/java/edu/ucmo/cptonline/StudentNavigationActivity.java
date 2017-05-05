@@ -57,7 +57,7 @@ public class StudentNavigationActivity extends AppCompatActivity {
 
         try {
             Applications[] applications = mapper.readValue(response,Applications[].class);
-            if (applications != null)
+            if (applications != null && applications[0].getStatus() != null)
                 status.setText(applications[0].getStatus());
         } catch (IOException e) {
             e.printStackTrace();

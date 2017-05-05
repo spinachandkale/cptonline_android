@@ -87,7 +87,8 @@ public class RegisterActivity extends AppCompatActivity {
         Boolean ret = true;
         ObjectMapper mapper = new ObjectMapper();
         Logins loginObj = mapper.readValue(response, Logins.class);
-        if (loginObj.getName().equals(name) && loginObj.getEmail().equals(email)) {
+        if (loginObj.getName() != null && loginObj.getName().equals(name)
+                && loginObj.getEmail() != null && loginObj.getEmail().equals(email)) {
             ret = true;
         } else {
             ret = false;

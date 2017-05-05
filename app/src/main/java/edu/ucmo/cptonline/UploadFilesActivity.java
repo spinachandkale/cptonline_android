@@ -224,7 +224,8 @@ public class UploadFilesActivity extends AppCompatActivity {
             } else if (filename.contains("CentralDegree")) {
                 student.setCentraldegree(filename);
             }
-            if (student.getDirectorylink().equals("") && !directoryLink.equals("")) {
+            if ( student.getDirectorylink() != null &&
+                    student.getDirectorylink().equals("") && !directoryLink.equals("")) {
                 student.setDirectorylink(directoryLink);
             }
             NetworkRequest nr1 = new NetworkRequest("http://35.188.97.91:8761/students/");
@@ -235,10 +236,10 @@ public class UploadFilesActivity extends AppCompatActivity {
                 Toast.makeText(this, "Unable to save student details", Toast.LENGTH_SHORT).show();
             }
 
-            if(!student.getDirectorylink().equals("")
-                && !student.getInternshipform().equals("")
-                && !student.getCentraldegree().equals("")
-                && !student.getOfferletter().equals("")) {
+            if(student.getDirectorylink() != null && !student.getDirectorylink().equals("")
+                    && student.getInternshipform() != null && !student.getInternshipform().equals("")
+                    && student.getCentraldegree() != null && !student.getCentraldegree().equals("")
+                    && student.getOfferletter() != null && !student.getOfferletter().equals("")) {
 
                 if(shareDriveFolder()) {
                     updateApplicationStatus(Long.toString(student.getId()));
@@ -326,7 +327,7 @@ public class UploadFilesActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return notification.getEmail();
+        return (notification.getEmail() != null) ? notification.getEmail() : "";
     }
 
     private boolean checkPermissions() {

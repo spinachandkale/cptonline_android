@@ -164,34 +164,34 @@ public class PdfHelper {
 
         String htmlStr = htmlContent;
 
-        htmlStr = htmlStr.replace("@!NAME!@",student.getName());
+        htmlStr = htmlStr.replace("@!NAME!@",(student.getName() != null) ? student.getName() : "");
         htmlStr = htmlStr.replace("@!ID!@",Long.toString(student.getId()));
-        htmlStr = htmlStr.replace("@!MAJOR!@",student.getMajor());
-        htmlStr = htmlStr.replace("@!GPA!@",student.getGpa());
-        htmlStr = htmlStr.replace("@!GRADSEM!@",student.getGradsemester());
+        htmlStr = htmlStr.replace("@!MAJOR!@",(student.getMajor() != null) ? student.getMajor() : "");
+        htmlStr = htmlStr.replace("@!GPA!@",(student.getGpa()!= null) ? student.getGpa() : "");
+        htmlStr = htmlStr.replace("@!GRADSEM!@",(student.getGradsemester() != null) ? student.getGradsemester() : "");
         htmlStr = htmlStr.replace("@!GRADYEAR!@",Integer.toString(student.getGradyear()));
-        htmlStr = htmlStr.replace("@!STUADDRESS!@",student.getStreet());
-        htmlStr = htmlStr.replace("@!STUAPTNO!@",student.getAptunitno());
-        htmlStr = htmlStr.replace("@!STUCITYSTATEZIP!@",student.getCitystatezip());
-        htmlStr = htmlStr.replace("@!STUPHONE!@",student.getPhonenumber());
-        htmlStr = htmlStr.replace("@!STUEMAIL!@",student.getEmail());
+        htmlStr = htmlStr.replace("@!STUADDRESS!@",(student.getStreet() != null) ? student.getStreet() : "");
+        htmlStr = htmlStr.replace("@!STUAPTNO!@",(student.getAptunitno() != null) ? student.getAptunitno() : "");
+        htmlStr = htmlStr.replace("@!STUCITYSTATEZIP!@",(student.getCitystatezip() != null) ? student.getCitystatezip() : "");
+        htmlStr = htmlStr.replace("@!STUPHONE!@",(student.getPhonenumber() != null) ? student.getPhonenumber() : "");
+        htmlStr = htmlStr.replace("@!STUEMAIL!@",(student.getEmail() != null) ? student.getEmail() : "");
         htmlStr = htmlStr.replace("@!STUSSN_Y_OR_N!@",(student.getSsnrequired() == 1) ? "no" : "yes");
         htmlStr = htmlStr.replace("@!STU2SEMS_Y_OR_N!@",(student.getOneyearstudied() == 1) ? "yes" : "no");
-        htmlStr = htmlStr.replace("@!CPTYPE!@",student.getCpttype());
-        htmlStr = htmlStr.replace("@!INSTRUCTOR!@",student.getCptcourseinstructor());
+        htmlStr = htmlStr.replace("@!CPTYPE!@",(student.getCpttype() != null) ? student.getCpttype() : "");
+        htmlStr = htmlStr.replace("@!INSTRUCTOR!@",(student.getCptcourseinstructor() != null) ? student.getCptcourseinstructor() : "");
         htmlStr = htmlStr.replace("@!CREDITHOURS!@",Integer.toString(student.getCptsemestercredithours()));
-        htmlStr = htmlStr.replace("@!CPTSEMISTER!@",student.getCptsemester());
+        htmlStr = htmlStr.replace("@!CPTSEMISTER!@",(student.getCptsemester() != null) ? student.getCptsemester() : "");
         htmlStr = htmlStr.replace("@!CPTYEAR!@",Integer.toString(student.getCptyear()));
-        htmlStr = htmlStr.replace("@!CPTSTARTDATE!@",dateFormat.format(student.getCptstart()));
-        htmlStr = htmlStr.replace("@!CPTENDDATE!@",dateFormat.format(student.getCptend()));
-        htmlStr = htmlStr.replace("@!JOBTITLE!@",student.getCptjobtitle());
-        htmlStr = htmlStr.replace("@!JOBDESCRIPTION!@",student.getCptjobdescription());
-        htmlStr = htmlStr.replace("@!COMPANYNAME!@",student.getCptemployer());
-        htmlStr = htmlStr.replace("@!COMPANYSTREET!@",student.getCptemployerstreet());
-        htmlStr = htmlStr.replace("@!COMPANYCITYSTATEZIP!@",student.getCptemployercitystatezip());
-        htmlStr = htmlStr.replace("@!SUPERVISORNAMETITLE!@",student.getCptsupervisornametitle());
-        htmlStr = htmlStr.replace("@!SUPERVISOREMAIL!@",student.getCptsupervisoremail());
-        htmlStr = htmlStr.replace(" @!SUPERVISORPHONE!@",student.getCptsupervisorphno());
+        htmlStr = htmlStr.replace("@!CPTSTARTDATE!@",(student.getCptstart() != null) ? dateFormat.format(student.getCptstart()) : "0000-00-00");
+        htmlStr = htmlStr.replace("@!CPTENDDATE!@",(student.getCptend() != null) ? dateFormat.format(student.getCptend()) : "0000-00-00");
+        htmlStr = htmlStr.replace("@!JOBTITLE!@",(student.getCptjobtitle() != null) ? student.getCptjobtitle() : "");
+        htmlStr = htmlStr.replace("@!JOBDESCRIPTION!@",(student.getCptjobdescription() != null) ? student.getCptjobdescription() : "");
+        htmlStr = htmlStr.replace("@!COMPANYNAME!@",(student.getCptemployer() != null) ? student.getCptemployer() : "");
+        htmlStr = htmlStr.replace("@!COMPANYSTREET!@",(student.getCptemployerstreet() != null) ? student.getCptemployerstreet() : "");
+        htmlStr = htmlStr.replace("@!COMPANYCITYSTATEZIP!@",(student.getCptemployercitystatezip() != null) ? student.getCptemployercitystatezip() : "");
+        htmlStr = htmlStr.replace("@!SUPERVISORNAMETITLE!@",(student.getCptsupervisornametitle() != null) ? student.getCptsupervisornametitle() : "");
+        htmlStr = htmlStr.replace("@!SUPERVISOREMAIL!@",(student.getCptsupervisoremail() != null) ? student.getCptsupervisoremail() : "");
+        htmlStr = htmlStr.replace(" @!SUPERVISORPHONE!@",(student.getCptsupervisorphno() != null) ? student.getCptsupervisorphno() : "");
 
         htmlContent = htmlStr;
     }

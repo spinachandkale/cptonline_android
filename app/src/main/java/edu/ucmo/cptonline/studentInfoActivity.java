@@ -476,7 +476,7 @@ public class studentInfoActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return notification.getEmail();
+        return (notification.getEmail() != null) ? notification.getEmail() : "";
     }
 
     private String getSharedPreferenceValue(String key) {
