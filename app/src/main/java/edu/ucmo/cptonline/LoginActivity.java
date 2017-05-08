@@ -44,6 +44,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -358,7 +361,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     ObjectMapper mapper = new ObjectMapper();
                     Logins loginObj = mapper.readValue(jsonInString, Logins.class);
 //                    if (BCrypt.checkpw(mPassword, loginObj.getPassword())) {
-                    if (true) {
+                    if (passwordVerify(mPassword,loginObj.getPassword())) {
                         return true;
                     } else {
                         Toast.makeText(getApplicationContext(),"login failure", Toast.LENGTH_LONG).show();
@@ -404,6 +407,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(key, value);
             editor.commit();
+        }
+
+
+        private Boolean passwordVerify(String enteredPassword, String md5) {
+            try {
+                if (md5(enteredPassword).equals(md5)) {
+                    return Boolean.TRUE;
+                } else {
+                    return Boolean.FALSE;
+                }
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            return Boolean.FALSE;
+        }
+
+        private String md5(String input) throws NoSuchAlgorithmException {
+            String result = input;
+            if(input != null) {
+                MessageDigest md = MessageDigest.getInstance("MD5"); //or "SHA-1"
+                md.update(input.getBytes());
+                BigInteger hash = new BigInteger(1, md.digest());
+                result = hash.toString(16);
+                while(result.length() < 32) { //40 for SHA-1
+                    result = "0" + result;
+                }
+            }
+            return result;
         }
 
 
