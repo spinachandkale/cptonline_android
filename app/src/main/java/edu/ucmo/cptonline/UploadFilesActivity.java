@@ -48,7 +48,7 @@ import edu.ucmo.cptonline.helper.GoogleDriveHelper;
 import edu.ucmo.cptonline.helper.NetworkRequest;
 import edu.ucmo.cptonline.helper.UploadHelper;
 
-public class UploadFilesActivity extends AppCompatActivity {
+public class UploadFilesActivity extends BaseActivity {
 
     private static final int REQUEST_CODE = 99;
     String filename;
@@ -58,6 +58,7 @@ public class UploadFilesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_files);
+        super.onCreateDrawer();
 
         checkPermissions();
 

@@ -18,12 +18,13 @@ import edu.ucmo.cptonline.datasource.Applications;
 import edu.ucmo.cptonline.datasource.Students;
 import edu.ucmo.cptonline.helper.NetworkRequest;
 
-public class StudentNavigationActivity extends AppCompatActivity {
+public class StudentNavigationActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_navigation);
+        super.onCreateDrawer();
 
         Button btnFileApplication = (Button) findViewById(R.id.btnFileApplication);
         Button btnUploadFiles = (Button) findViewById(R.id.btnUploadFiles);

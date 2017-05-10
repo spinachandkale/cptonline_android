@@ -39,7 +39,7 @@ import edu.ucmo.cptonline.helper.NetworkRequest;
 import edu.ucmo.cptonline.helper.PdfHelper;
 import edu.ucmo.cptonline.helper.UploadHelper;
 
-public class studentInfoActivity extends AppCompatActivity {
+public class studentInfoActivity extends BaseActivity {
 
     private String studentEmail;
     private Boolean newApplication;
@@ -51,6 +51,7 @@ public class studentInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_info);
+        super.onCreateDrawer();
 
         Button edit = (Button) findViewById(R.id.btnEditStudentInfo);
         edit.setOnClickListener(new View.OnClickListener() {

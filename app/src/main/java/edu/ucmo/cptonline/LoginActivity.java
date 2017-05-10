@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -55,7 +56,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class LoginActivity extends BaseActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -86,6 +87,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        super.onCreateDrawer();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -350,46 +353,45 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         @Override
-        protected Boolean doInBackground(Void... params){
+        protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Get email main part
-                String[] emailParts = mEmail.split("@");
-                // Get http object
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(getString(R.string.url_get_login)+emailParts[0])
-                        .build();
-                // Make request
-                OkHttpClient httpclient = new OkHttpClient();
-                String jsonInString;
-                try {
-                    Response response = httpclient.newCall(request).execute();
-                    jsonInString = response.body().string().toString();
-                    ObjectMapper mapper = new ObjectMapper();
-                    Logins loginObj = mapper.readValue(jsonInString, Logins.class);
-                    if(loginObj.getIsinternshipoffice() == 1 || loginObj.getIsadmin() == 1) {
-                        Toast.makeText(getApplicationContext(),"Only student login allowed", Toast.LENGTH_LONG).show();
-                        return false;
-                    }
-//                    if (BCrypt.checkpw(mPassword, loginObj.getPassword())) {
-                    if (passwordVerify(mPassword,loginObj.getPassword())) {
-                        return true;
-                    } else {
-                        Toast.makeText(getApplicationContext(),"login failure", Toast.LENGTH_LONG).show();
-                        return false;
-                    }
-                } catch (Exception e) {
-                    // Todo: handle this exception and throw error.
-                }
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
+            // Get email main part
+            String[] emailParts = mEmail.split("@");
+            if (!emailParts[1].equals("ucmo.edu")) {
+                return Boolean.FALSE;
             }
+            // Get http object
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(getString(R.string.url_get_login)+emailParts[0])
+                    .build();
+            // Make request
+            OkHttpClient httpclient = new OkHttpClient();
+            String jsonInString;
+            try {
+                Response response = httpclient.newCall(request).execute();
+                jsonInString = response.body().string().toString();
+                ObjectMapper mapper = new ObjectMapper();
+                Logins loginObj = mapper.readValue(jsonInString, Logins.class);
+                if(loginObj.getIsinternshipoffice() == 1 || loginObj.getIsadmin() == 1) {
+                    Toast.makeText(getApplicationContext(),"Only student login allowed", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+//                    if (BCrypt.checkpw(mPassword, loginObj.getPassword())) {
+                if (passwordVerify(mPassword,loginObj.getPassword())) {
+                    return Boolean.TRUE;
+                } else {
+//                    Toast.makeText(getApplicationContext(),"login failure", Toast.LENGTH_LONG).show();
+                    return Boolean.FALSE;
+                }
+            } catch (Exception e) {
+                // Todo: handle this exception and throw error.
+            }
+//                Thread.sleep(2000);
 
             // TODO: register the new account here.
-            return true;
+            return Boolean.FALSE;
         }
 
         @Override
@@ -399,7 +401,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
 //                finish();
-                Toast.makeText(getApplicationContext(),"login success", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(),"login success", Toast.LENGTH_LONG).show();
                 saveToSharedPreferences("email",mEmail);
                 saveToSharedPreferences("password", mPassword);
                 proceedToNavigation();

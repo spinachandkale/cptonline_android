@@ -8,7 +8,7 @@
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">Incorrect password</string>
+    <string name="error_incorrect_password">Incorrect username and password</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -36,4 +36,9 @@
     <string name="radio_no">No</string>
     <string name="radio_fulltime">Full-Time</string>
     <string name="radio_parttime">Part-Time</string>
+    <string name="menu">menu</string>
+
+    <string-array name="layers_array">
+        <item>Logout</item>
+    </string-array>
 </resources>

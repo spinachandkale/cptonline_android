@@ -14,6 +14,9 @@ import android.widget.Toast;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import edu.ucmo.cptonline.datasource.Logins;
 import edu.ucmo.cptonline.helper.NetworkRequest;
@@ -50,14 +53,20 @@ public class RegisterActivity extends AppCompatActivity {
         String nameStr = name.getText().toString();
         String emailStr = email.getText().toString();
         String passwordStr = password.getText().toString();
+        String passwordHash = "";
+        try {
+            passwordHash = md5(passwordStr);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
-        if (studentid == 0 || nameStr.equals("") || emailStr.equals("") || passwordStr.equals("")) {
+        if (studentid == 0 || nameStr.equals("") || emailStr.equals("") || passwordHash.equals("")) {
             Toast.makeText(getApplicationContext(), "please enter details", Toast.LENGTH_LONG);
         } else if (emailValidate(emailStr) == false){
             Toast.makeText(getApplicationContext(), "please enter valid email", Toast.LENGTH_LONG);
         } else {
             NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8760/logins");
-            nr.PostLogin(studentid,emailStr,nameStr,passwordStr);
+            nr.PostLogin(studentid,emailStr,nameStr,passwordHash);
             nr.waitForResult();
             // verify response
             if (!nr.getResponse().equals("")
@@ -80,7 +89,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public Boolean emailValidate(String email) {
-        return email.contains("@");
+        String emailParts[] = email.split("@");
+        if(emailParts.length != 2) {
+            return Boolean.FALSE;
+        }
+        if (!emailParts[1].equals("ucmo.edu")) {
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
     }
 
     public Boolean verifyLoginResponse(String response, String email, String name) throws IOException {
@@ -94,6 +110,20 @@ public class RegisterActivity extends AppCompatActivity {
             ret = false;
         }
         return ret;
+    }
+
+    private String md5(String input) throws NoSuchAlgorithmException {
+        String result = input;
+        if(input != null) {
+            MessageDigest md = MessageDigest.getInstance("MD5"); //or "SHA-1"
+            md.update(input.getBytes());
+            BigInteger hash = new BigInteger(1, md.digest());
+            result = hash.toString(16);
+            while(result.length() < 32) { //40 for SHA-1
+                result = "0" + result;
+            }
+        }
+        return result;
     }
 
 }

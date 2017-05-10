@@ -1,104 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fillViewport="true">
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" android:background="#fff">
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!-- The main content view -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <!--  Header  Starts-->
-        <LinearLayout android:id="@+id/header"
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dip"
-            android:paddingBottom="5dip">
-            <!--android:background="@layout/header_gradient"-->
-            <!-- Logo Start-->
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"/>
-            <!-- Logo Ends -->
-        </LinearLayout>
-        <!--  Header Ends -->
-        <!-- Footer Start -->
-        <LinearLayout android:id="@+id/footer"
-            android:layout_width="fill_parent"
-            android:layout_height="90dip"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true">
-        </LinearLayout>
-        <!--android:background="@layout/footer_repeat"-->
-        <!-- Footer Ends -->
+            android:layout_height="fill_parent"
+            android:fillViewport="true">
 
-        <!-- Upload Files Buttons -->
-        <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:layout_below="@id/header">
-            <!-- Full Name Label -->
-
-            <!-- Register Button -->
-            <Button android:id="@+id/btnUploadCentralDegree"
+            <RelativeLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:text="Upload Central Degree"/>
+                android:background="#fff">
 
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="#372c24"
-                android:text="CentralDegree upload status"/>
-            <TextView android:layout_width="fill_parent"
-                android:id="@+id/upload_CentralDegree_status"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="#372c24"
-                android:text=""/>
+                <!--  Header  Starts-->
+                <LinearLayout
+                    android:id="@+id/header"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip">
+                    <!--android:background="@layout/header_gradient"-->
+                    <!-- Logo Start-->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+                    <!-- Logo Ends -->
+                </LinearLayout>
+                <!--  Header Ends -->
+                <!-- Footer Start -->
+                <LinearLayout
+                    android:id="@+id/footer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="90dip"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"></LinearLayout>
+                <!--android:background="@layout/footer_repeat"-->
+                <!-- Footer Ends -->
 
-            <Button android:id="@+id/btnUploadOfferLetter"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:text="Upload Offer Letter"/>
+                <!-- Upload Files Buttons -->
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/header"
+                    android:orientation="vertical"
+                    android:padding="10dip">
+                    <!-- Full Name Label -->
 
-            <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="#372c24"
-                android:text="OfferLetter upload status"/>
-            <TextView android:layout_width="fill_parent"
-                android:id="@+id/upload_offerletter_status"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textColor="#372c24"
-                android:text=""/>
+                    <!-- Register Button -->
+                    <Button
+                        android:id="@+id/btnUploadCentralDegree"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip"
+                        android:text="Upload Central Degree" />
 
-            <Button android:id="@+id/btnMainpage"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:text="Go to mainpage"/>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="CentralDegree upload status"
+                        android:textColor="#372c24" />
 
-            <Button android:id="@+id/btnUpload"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:text="Upload"/>
+                    <TextView
+                        android:id="@+id/upload_CentralDegree_status"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text=""
+                        android:textColor="#372c24" />
 
-            <ImageView
-                android:id="@+id/scannedImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true" />
+                    <Button
+                        android:id="@+id/btnUploadOfferLetter"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip"
+                        android:text="Upload Offer Letter" />
 
-        </LinearLayout>
-        <!-- Registration Form Ends -->
-    </RelativeLayout>
-</ScrollView>
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="OfferLetter upload status"
+                        android:textColor="#372c24" />
+
+                    <TextView
+                        android:id="@+id/upload_offerletter_status"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text=""
+                        android:textColor="#372c24" />
+
+                    <Button
+                        android:id="@+id/btnMainpage"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip"
+                        android:text="Go to mainpage" />
+
+                    <Button
+                        android:id="@+id/btnUpload"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dip"
+                        android:text="Upload" />
+
+                    <ImageView
+                        android:id="@+id/scannedImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                </LinearLayout>
+                <!-- Registration Form Ends -->
+            </RelativeLayout>
+        </ScrollView>
+    </FrameLayout>
+    <!-- The navigation drawer -->
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#ffff"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
+</android.support.v4.widget.DrawerLayout>
