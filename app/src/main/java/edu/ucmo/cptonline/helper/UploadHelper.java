@@ -16,7 +16,6 @@ import java.util.ArrayList;
 
 public class UploadHelper extends AsyncTask<ArrayList<String>, Void, Integer> {
 
-
     private int taskResult = -1;
 
     @Override

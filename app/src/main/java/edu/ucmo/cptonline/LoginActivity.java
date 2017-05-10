@@ -79,6 +79,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private String studentEmail;
+    private String studentPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,9 +88,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
+        mPasswordView = (EditText) findViewById(R.id.password);
         populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -121,11 +123,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
+//        if (!mayRequestContacts()) {
+//            return;
+//        }
+//
+//        getLoaderManager().initLoader(0, null, this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        studentEmail= preferences.getString("email", null);
+        studentPassword = preferences.getString("password", null);
+        if(!studentEmail.isEmpty() && !studentPassword.isEmpty()) {
+            mEmailView.setText(studentEmail);
+            mPasswordView.setText(studentPassword);
         }
-
-        getLoaderManager().initLoader(0, null, this);
     }
 
     private boolean mayRequestContacts() {
@@ -360,6 +369,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     jsonInString = response.body().string().toString();
                     ObjectMapper mapper = new ObjectMapper();
                     Logins loginObj = mapper.readValue(jsonInString, Logins.class);
+                    if(loginObj.getIsinternshipoffice() == 1 || loginObj.getIsadmin() == 1) {
+                        Toast.makeText(getApplicationContext(),"Only student login allowed", Toast.LENGTH_LONG).show();
+                        return false;
+                    }
 //                    if (BCrypt.checkpw(mPassword, loginObj.getPassword())) {
                     if (passwordVerify(mPassword,loginObj.getPassword())) {
                         return true;
