@@ -54,25 +54,11 @@
                     android:padding="10dip">
                     <!-- Full Name Label -->
 
-                    <!-- Register Button -->
-                    <Button
-                        android:id="@+id/btnFileApplication"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dip"
-                        android:text="File/edit application" />
-
-                    <Button
-                        android:id="@+id/btnUploadFiles"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dip"
-                        android:text="Upload files" />
-
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:textStyle="bold"
                         android:text="Status"
                         android:textColor="#372c24" />
 
@@ -81,8 +67,25 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:text=""
+                        android:textStyle="italic"
                         android:textColor="#372c24" />
+                    <!-- Register Button -->
+
+                    <Button
+                    android:id="@+id/btnFileApplication"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:text="File/edit application" />
+
+                    <Button
+                    android:id="@+id/btnUploadFiles"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dip"
+                    android:text="Upload files" />
 
                 </LinearLayout>
                 <!-- Registration Form Ends -->

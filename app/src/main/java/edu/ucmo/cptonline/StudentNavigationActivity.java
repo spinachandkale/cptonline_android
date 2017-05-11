@@ -58,8 +58,26 @@ public class StudentNavigationActivity extends BaseActivity {
 
         try {
             Applications[] applications = mapper.readValue(response,Applications[].class);
-            if (applications != null && applications[0].getStatus() != null)
-                status.setText(applications[0].getStatus());
+
+            if (applications != null && !applications[0].getStatus().isEmpty()) {
+
+                String statusMessage = "";
+                switch (applications[0].getStatus()) {
+                    case "student-submission-in-progress":
+                        statusMessage = "Application is not submitted yet, you need to fill application and upload offer letter and central degree to complete the process";
+                        break;
+                    case "coordinator-verification-required":
+                        statusMessage = "Your application is currently verified by CIS department coordinator, this has to go through internship office and graduation office as well";
+                        break;
+                    case "internship-office-verification":
+                        statusMessage = "Your application is currently verified by internship department, this has to go through graduation office as well";
+                        break;
+                    case "submitted-to-international-center":
+                        statusMessage = "Graduation office needs to verify your application";
+                        break;
+                }
+                status.setText(statusMessage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

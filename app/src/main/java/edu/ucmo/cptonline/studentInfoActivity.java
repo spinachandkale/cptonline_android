@@ -191,11 +191,13 @@ public class studentInfoActivity extends BaseActivity {
         Spinner cptYear = (Spinner) findViewById(R.id.info_cpt_year);
         cptYear.setSelection(getSpinnerIndex(cptYear, Integer.toString(student.getCptyear())));
 
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
         ((EditText)findViewById(R.id.info_cpt_startdate)).setText((student.getCptstart() != null)
-                ? student.getCptstart().toString() : "0000-00-00");
+                ? df.format(student.getCptstart()) : "0000-00-00");
 
         ((EditText)findViewById(R.id.info_cpt_enddate)).setText((student.getCptend() != null)
-                ? student.getCptend().toString() : "0000-00-00");
+                ? df.format(student.getCptend()) : "0000-00-00");
 
         ((EditText)findViewById(R.id.info_cpt_jobtitle)).setText((student.getCptjobtitle() != null)
                 ? student.getCptjobtitle() : "");
@@ -305,7 +307,7 @@ public class studentInfoActivity extends BaseActivity {
 
         student.setCptyear(Integer.parseInt(((Spinner)findViewById(R.id.info_cpt_year)).getSelectedItem().toString()));
 
-        DateFormat formatter = new SimpleDateFormat("YYYY-mm-dd");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date date = formatter.parse(((EditText)findViewById(R.id.info_cpt_startdate)).getText().toString());
             student.setCptstart(date);

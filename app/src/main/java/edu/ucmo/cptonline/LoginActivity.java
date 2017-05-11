@@ -134,7 +134,8 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         studentEmail= preferences.getString("email", null);
         studentPassword = preferences.getString("password", null);
-        if(!studentEmail.isEmpty() && !studentPassword.isEmpty()) {
+        if(studentEmail != null && !studentEmail.isEmpty()
+                && studentPassword!= null && !studentPassword.isEmpty()) {
             mEmailView.setText(studentEmail);
             mPasswordView.setText(studentPassword);
         }
