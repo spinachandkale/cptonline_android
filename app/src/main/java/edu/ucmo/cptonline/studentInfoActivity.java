@@ -1,8 +1,14 @@
 package edu.ucmo.cptonline;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.drm.ProcessedData;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -61,8 +67,13 @@ public class studentInfoActivity extends BaseActivity {
                     setupUI((View)findViewById(R.id.info_layout), true);
                     ((Button)v).setText("Save");
                 } else if(((Button)v).getText().equals("Save")){
-                    saveStudentDetails();
-                    proceedToNavigationActivity();
+                    ProgressDialog dialog = new ProgressDialog(studentInfoActivity.this);
+                    dialog.setMessage("Saving details");
+                    dialog.show();
+                    Students student = getStudentDetails();
+                    saveTask sTask = new saveTask(student, dialog);
+                    sTask.execute((Void)null);
+
                 }
             }
         });
@@ -89,6 +100,42 @@ public class studentInfoActivity extends BaseActivity {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+
+        final View mRegisterFormView = findViewById(R.id.info_form);
+        final View mProgressView = findViewById(R.id.info_progress);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mRegisterFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -240,9 +287,7 @@ public class studentInfoActivity extends BaseActivity {
         return index;
     }
 
-
-    private void saveStudentDetails() {
-
+    private Students getStudentDetails() {
         Students student = studentInDB;
 
         // Fill student information
@@ -295,7 +340,7 @@ public class studentInfoActivity extends BaseActivity {
                 student.setCpttype("Full time");
                 break;
             case R.id.info_cpt_type_parttime:
-                student.setCpttype("part time");
+                student.setCpttype("Part time");
                 break;
         }
 
@@ -340,202 +385,174 @@ public class studentInfoActivity extends BaseActivity {
 
         student.setCptsupervisorphno(((EditText)findViewById(R.id.info_company_supervisorphone)).getText().toString());
 
-        // create pdf and upload
+        return student;
 
-//        String filename  = Environment.getExternalStorageDirectory() + "/cptonline/" + "application_" + getDateTime() + ".pdf";
-//        if (createPDF(student)) {
-//            if (!uploadFile(filename, Long.toString(student.getId()))) {
-//                Toast.makeText(this, "unable to upload file to drive", Toast.LENGTH_LONG).show();
-//                return;
-//            }
-//        }
+    }
 
-        directoryLink = createPDF(student);
+    public class saveTask extends AsyncTask<Void, Void, Boolean> {
 
+        private Students student;
+        private ProgressDialog pd;
 
-        if (!directoryLink.isEmpty() && student.getDirectorylink() != null
-                && student.getDirectorylink().isEmpty()) {
-            student.setDirectorylink(directoryLink);
+        public saveTask(Students parsedStudent, ProgressDialog pd) {
+            this.student  = parsedStudent;
+            this.pd = pd;
         }
 
-        student.setInternshipform(directoryLink);
-
-        // Send save request to service
-        if (!saveStudent(student)) {
-            Toast.makeText(getApplicationContext(), "Unable to save student application, processing error", Toast.LENGTH_LONG).show();
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return saveStudentDetails(student);
         }
-        // Save Application
-        Date today = Calendar.getInstance().getTime();
-        Applications application = new Applications();
-        application.setStudentid(student.getId());
-        application.setName(student.getName());
-        application.setDateapplied(today);
-        if (!student.getInternshipform().isEmpty() && !student.getOfferletter().isEmpty()
-                && !student.getCentraldegree().isEmpty()
-                && !student.getDirectorylink().isEmpty()) {
-            if (shareDriveFolder()) {
-                application.setStatus("coordinator-verification-required");
-            } else {
+
+        @Override
+        protected void onPostExecute(final Boolean result) {
+            pd.dismiss();
+            if (!result) {
+                Toast.makeText(getApplicationContext(), "Unable to save student details", Toast.LENGTH_LONG);
+            }
+            proceedToNavigationActivity();
+        }
+
+
+
+        private Boolean saveStudentDetails(Students student) {
+
+
+            directoryLink = createPDF(student);
+
+            if (!directoryLink.isEmpty() && student.getDirectorylink() != null
+                    && student.getDirectorylink().isEmpty()) {
+                student.setDirectorylink(directoryLink);
+            }
+
+            student.setInternshipform(directoryLink);
+
+            // Send save request to service
+            if (!saveStudent(student)) {
+                return Boolean.FALSE;
+            }
+            // Save Application
+            Date today = Calendar.getInstance().getTime();
+            Applications application = new Applications();
+            application.setStudentid(student.getId());
+            application.setName(student.getName());
+            application.setDateapplied(today);
+            if (!student.getInternshipform().isEmpty() && !student.getOfferletter().isEmpty()
+                    && !student.getCentraldegree().isEmpty()
+                    && !student.getDirectorylink().isEmpty()) {
+                if (shareDriveFolder()) {
+                    application.setStatus("coordinator-verification-required");
+                } else {
+                    application.setStatus("student-submission-in-progress");
+                    return Boolean.FALSE;
+                }
+            } else{
                 application.setStatus("student-submission-in-progress");
-                Toast.makeText(this, "Unable to share folder in drive", Toast.LENGTH_LONG).show();
             }
-        } else{
-            application.setStatus("student-submission-in-progress");
-        }
-        if (saveApplication(application)) {
-            Toast.makeText(this, "Application saved successfully", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Unable to save application", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public Boolean saveStudent(Students student) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students/");
-        if (newApplication) {
-            nr.postStudent(student);
-        } else {
-            nr.putStudent(student);
-        }
-        nr.waitForResult();
-        String response = nr.getResponse();
-        return !(response.equals("error"));
-    }
-
-    public Boolean saveApplication(Applications application) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/");
-        if (newApplication) {
-            nr.postApplication(application);
-        } else {
-            Applications existingApplication = getApplication(Long.toString(application.getStudentid()));
-            if (existingApplication != null) {
-                application.setId(existingApplication.getId());
+            if (saveApplication(application)) {
+            } else {
+                return Boolean.FALSE;
             }
-            nr.putApplication(application);
+            return Boolean.TRUE;
         }
-        nr.waitForResult();
-        String response = nr.getResponse();
-        return !(response.equals("error"));
+
+
+        private String createPDF(Students student) {
+            PdfHelper pdfHelper = new PdfHelper(student);
+            return pdfHelper.createPdf();
+        }
+
+        public Boolean saveStudent(Students student) {
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/students/");
+            if (newApplication) {
+                nr.postStudent(student);
+            } else {
+                nr.putStudent(student);
+            }
+            nr.waitForResult();
+            String response = nr.getResponse();
+            return !(response.equals("error"));
+        }
+
+        public Boolean saveApplication(Applications application) {
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/");
+            if (newApplication) {
+                nr.postApplication(application);
+            } else {
+                Applications existingApplication = getApplication(Long.toString(application.getStudentid()));
+                if (existingApplication != null) {
+                    application.setId(existingApplication.getId());
+                }
+                nr.putApplication(application);
+            }
+            nr.waitForResult();
+            String response = nr.getResponse();
+            return !(response.equals("error"));
+        }
+
+
+        private Boolean shareDriveFolder() {
+            DriveShareRequest request = new DriveShareRequest();
+            request.setEmail(getNotificationsEmail("coordinator-verification-required"));
+            request.setFileID(directoryLink);
+            request.setStudentID(getSharedPreferenceValue("studentId"));
+
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/share/");
+            nr.postDriveShare(request);
+            nr.waitForResult();
+            String response = nr.getResponse();
+            if (response.equals("success")) {
+                return Boolean.TRUE;
+            } else {
+                return Boolean.FALSE;
+            }
+        }
+
+        private String getNotificationsEmail(String status) {
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/notifications/"+status);
+            nr.getRequestDefault();
+            nr.waitForResult();
+            String response = nr.getResponse();
+
+            ObjectMapper mapper = new ObjectMapper();
+            Notifications notification = null;
+            try {
+                notification = mapper.readValue(response, Notifications.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return (notification.getEmail() != null) ? notification.getEmail() : "";
+        }
+
+        private Applications getApplication(String studentId) {
+            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/"+studentId);
+            nr.getRequestDefault();
+            nr.waitForResult();
+            String response = nr.getResponse();
+
+            ObjectMapper mapper = new ObjectMapper();
+            Applications[] applications;
+            try {
+                applications = mapper.readValue(response, Applications[].class);
+                if (applications.length > 0) {
+                    return applications[0];
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private String getSharedPreferenceValue(String key) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            return preferences.getString(key, null);
+        }
+
     }
 
     private void proceedToNavigationActivity() {
         Intent intent = new Intent(this, StudentNavigationActivity.class);
         startActivity(intent);
+        finish();
     }
-
-    private String createPDF(Students student) {
-        PdfHelper pdfHelper = new PdfHelper(student);
-        return pdfHelper.createPdf();
-    }
-//
-//    private void uploadPDF(String pdffile, Long studentId) {
-//        InputStream in = getResources().openRawResource(getResources().getIdentifier("client_secret",
-//                "raw", getPackageName()));
-//        GoogleDriveHelper driveHelper = new GoogleDriveHelper(in);
-//        try {
-//            driveHelper.uploadFile(pdffile, Long.toString(studentId));
-//            directoryLink = driveHelper.getDirectoryLink();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    private Boolean uploadFile(String filename, String studentId) {
-        Boolean ret = Boolean.FALSE;
-//        UploadHelper uh = new UploadHelper("http://35.188.97.91/cptuploads/postfile.php", filename, "application/pdf");
-        ArrayList<String> args = new ArrayList<>();
-        args.add("http://35.188.97.91/cptuploads/postfile.php");
-        args.add(filename);
-        args.add("application/pdf");
-        UploadHelper fileTransfer = new UploadHelper();
-        fileTransfer.execute(args);
-        while(fileTransfer.getStatus() != AsyncTask.Status.FINISHED) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        if(fileTransfer.getTaskResult() == 1) {
-            DriveUploadRequest request = new DriveUploadRequest();
-            File file = new File(filename);
-            request.setFilename(file.getName());
-            request.setStudentId(studentId);
-
-            NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads");
-            nr.postDriveUpload(request);
-            nr.waitForResult();
-            String response = nr.getResponse();
-            if(response.equals("")) {
-                Toast.makeText(this, "Problems in uploading to drive", Toast.LENGTH_SHORT).show();
-            } else {
-                directoryLink = response;
-                ret = Boolean.TRUE;
-            }
-        }
-        return  ret;
-    }
-
-    private String getDateTime() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
-
-    private Boolean shareDriveFolder() {
-        DriveShareRequest request = new DriveShareRequest();
-        request.setEmail(getNotificationsEmail("coordinator-verification-required"));
-        request.setFileID(directoryLink);
-        request.setStudentID(getSharedPreferenceValue("studentId"));
-
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8759/uploads/share/");
-        nr.postDriveShare(request);
-        nr.waitForResult();
-        String response = nr.getResponse();
-        if (response.equals("success")) {
-            return Boolean.TRUE;
-        } else {
-            return Boolean.FALSE;
-        }
-    }
-
-    private String getNotificationsEmail(String status) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/notifications/"+status);
-        nr.getRequestDefault();
-        nr.waitForResult();
-        String response = nr.getResponse();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Notifications notification = null;
-        try {
-            notification = mapper.readValue(response, Notifications.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return (notification.getEmail() != null) ? notification.getEmail() : "";
-    }
-
-    private String getSharedPreferenceValue(String key) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        return preferences.getString(key, null);
-    }
-
-    private Applications getApplication(String studentId) {
-        NetworkRequest nr = new NetworkRequest("http://35.188.97.91:8761/applications/"+studentId);
-        nr.getRequestDefault();
-        nr.waitForResult();
-        String response = nr.getResponse();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Applications[] applications;
-        try {
-            applications = mapper.readValue(response, Applications[].class);
-            if (applications.length > 0) {
-                return applications[0];
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }

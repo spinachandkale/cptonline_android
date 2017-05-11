@@ -110,7 +110,9 @@ public class BaseActivity extends AppCompatActivity
 
     private void proceedToLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 
     public void saveToSharedPreferences(String key, String value) {
