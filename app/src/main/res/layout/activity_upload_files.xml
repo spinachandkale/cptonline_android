@@ -20,32 +20,6 @@
                 android:background="#fff">
 
                 <!--  Header  Starts-->
-                <LinearLayout
-                    android:id="@+id/header"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="5dip"
-                    android:paddingTop="5dip">
-                    <!--android:background="@layout/header_gradient"-->
-                    <!-- Logo Start-->
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dip" />
-                    <!-- Logo Ends -->
-                </LinearLayout>
-                <!--  Header Ends -->
-                <!-- Footer Start -->
-                <LinearLayout
-                    android:id="@+id/footer"
-                    android:layout_width="fill_parent"
-                    android:layout_height="90dip"
-                    android:layout_alignParentBottom="true"
-                    android:orientation="vertical"></LinearLayout>
-                <!--android:background="@layout/footer_repeat"-->
-                <!-- Footer Ends -->
-
-                <!-- Upload Files Buttons -->
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,66 +34,85 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dip"
-                        android:text="Upload Central Degree" />
+                        android:text="Scan Central Degree" />
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="CentralDegree upload status"
-                        android:textColor="#372c24" />
-
-                    <TextView
-                        android:id="@+id/upload_CentralDegree_status"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text=""
-                        android:textColor="#372c24" />
+                    <!--<TextView-->
+                    <!--android:id="@+id/upload_CentralDegree_status"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="16dp"-->
+                    <!--android:text=""-->
+                    <!--android:textColor="#372c24" />-->
 
                     <Button
                         android:id="@+id/btnUploadOfferLetter"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dip"
-                        android:text="Upload Offer Letter" />
+                        android:text="Scan Offer Letter" />
+
 
                     <TextView
+                        android:id="@+id/upload_status"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:text="OfferLetter upload status"
-                        android:textColor="#372c24" />
-
-                    <TextView
-                        android:id="@+id/upload_offerletter_status"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:text=""
-                        android:textColor="#372c24" />
+                        android:textColor="#b71c1c" />
 
-                    <Button
-                        android:id="@+id/btnMainpage"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dip"
-                        android:text="Go to mainpage" />
+                    <!--<Button-->
+                    <!--android:id="@+id/btnMainpage"-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="10dip"-->
+                    <!--android:text="Go to mainpage" />-->
 
                     <Button
                         android:id="@+id/btnUpload"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dip"
+                        android:layout_marginBottom="10dip"
+                        android:enabled="false"
+                        android:textColor="#fff"
                         android:text="Upload" />
 
                     <ImageView
                         android:id="@+id/scannedImage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" />
+                        android:layout_gravity="center_horizontal"
+                        />
+
 
                 </LinearLayout>
+                <!--  Header Ends -->
+                <!-- Footer Start -->
+                <LinearLayout
+                    android:id="@+id/header"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dip"
+                    android:paddingTop="5dip">
+                    <!--android:background="@layout/header_gradient"-->
+                    <!-- Logo Start-->
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dip" />
+                    <!-- Logo Ends -->
+                </LinearLayout>
+                <!--android:background="@layout/footer_repeat"-->
+                <!-- Footer Ends -->
+
+                <!-- Upload Files Buttons -->
+                <LinearLayout
+                    android:id="@+id/footer"
+                    android:layout_width="fill_parent"
+                    android:layout_height="90dip"
+                    android:layout_alignParentBottom="true"
+                    android:orientation="vertical"></LinearLayout>
                 <!-- Registration Form Ends -->
             </RelativeLayout>
         </ScrollView>

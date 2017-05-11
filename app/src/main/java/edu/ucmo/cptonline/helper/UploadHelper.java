@@ -1,5 +1,6 @@
 package edu.ucmo.cptonline.helper;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import java.io.File;
@@ -10,6 +11,8 @@ import java.net.URLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import edu.ucmo.cptonline.uploadTaskCompteletLister;
+
 /**
  * Created by avina on 5/3/2017.
  */
@@ -17,6 +20,14 @@ import java.util.ArrayList;
 public class UploadHelper extends AsyncTask<ArrayList<String>, Void, Integer> {
 
     private int taskResult = -1;
+
+    ProgressDialog pd;
+    uploadTaskCompteletLister<Integer> listner;
+
+    public UploadHelper(uploadTaskCompteletLister<Integer> listner, ProgressDialog pd) {
+        this.listner = listner;
+        this.pd = pd;
+    }
 
     @Override
     protected Integer doInBackground(ArrayList<String>... params) {
@@ -111,7 +122,9 @@ public class UploadHelper extends AsyncTask<ArrayList<String>, Void, Integer> {
 
     @Override
     protected void onPostExecute(Integer result) {
+        pd.dismiss();
         taskResult = (result == 1) ? 1 : 0;
+        listner.onUploadTaskComplete(result);
     }
 
     public Integer getTaskResult() {
