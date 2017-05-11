@@ -206,6 +206,8 @@ public class PdfHelper {
         htmlStr = htmlStr.replace("@!SUPERVISORNAMETITLE!@",(student.getCptsupervisornametitle() != null) ? student.getCptsupervisornametitle() : "");
         htmlStr = htmlStr.replace("@!SUPERVISOREMAIL!@",(student.getCptsupervisoremail() != null) ? student.getCptsupervisoremail() : "");
         htmlStr = htmlStr.replace(" @!SUPERVISORPHONE!@",(student.getCptsupervisorphno() != null) ? student.getCptsupervisorphno() : "");
+        Date tdate = new Date();
+        htmlStr = htmlStr.replace(" @!TODAYDATE!@",dateFormat.format(tdate));
 
         htmlContent = htmlStr;
     }

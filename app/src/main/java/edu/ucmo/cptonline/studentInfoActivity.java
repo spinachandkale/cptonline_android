@@ -312,6 +312,9 @@ public class studentInfoActivity extends BaseActivity {
             student = new Students();
         }
 
+        student.setEmail(studentEmail);
+        student.setCptcourse("CIS 5670 - Internship");
+
         // Fill student information
 
         student.setName(((EditText)findViewById(R.id.info_student_name)).getText().toString());
@@ -447,11 +450,7 @@ public class studentInfoActivity extends BaseActivity {
 
             directoryLink = createPDF(student);
 
-            if (!directoryLink.isEmpty() && student.getDirectorylink() != null
-                    && student.getDirectorylink().isEmpty()) {
-                student.setDirectorylink(directoryLink);
-            }
-
+            student.setDirectorylink(directoryLink);
             student.setInternshipform(directoryLink);
 
             // Send save request to service
