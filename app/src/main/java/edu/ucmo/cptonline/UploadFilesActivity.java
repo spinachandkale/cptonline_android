@@ -100,8 +100,11 @@ public class UploadFilesActivity extends BaseActivity
             @Override
             public void onClick(View v) {
                 actionUpload();
+                btnUpload.setVisibility(View.INVISIBLE);
                 btnUpload.setEnabled(false);
                 btnUpload.setBackgroundResource(android.R.drawable.btn_default);
+                ImageView scannedImageView = (ImageView) findViewById(R.id.scannedImage);
+                scannedImageView.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -123,8 +126,10 @@ public class UploadFilesActivity extends BaseActivity
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 getContentResolver().delete(uri, null, null);
                 ImageView scannedImageView = (ImageView) findViewById(R.id.scannedImage);
+                scannedImageView.setVisibility(View.VISIBLE);
                 scannedImageView.setImageBitmap(bitmap);
                 Button upload = (Button) findViewById(R.id.btnUpload);
+                upload.setVisibility(View.VISIBLE);
                 upload.setEnabled(true);
                 upload.setBackgroundResource(R.color.red);
                 ((TextView) findViewById(R.id.upload_status)).setText("");
@@ -192,9 +197,12 @@ public class UploadFilesActivity extends BaseActivity
     }
 
     @Override
-    public void onDriveTaskComplete(Boolean result) {
+    public void onDriveTaskComplete(Boolean result, Boolean statusChange) {
         if (result == Boolean.TRUE) {
             driveUploadHandleResult(result);
+        }
+        if (statusChange) {
+            proceedToStudentNavigationPage();
         }
     }
 
@@ -204,6 +212,12 @@ public class UploadFilesActivity extends BaseActivity
         private ProgressDialog pd;
         private String directoryLink;
         private driveTaskCompleteListner<Boolean> listner;
+
+        private Boolean isApplicationStatusChanged = Boolean.FALSE;
+
+        public Boolean getApplicationStatusChanged() {
+            return isApplicationStatusChanged;
+        }
 
         public driveTask(driveTaskCompleteListner<Boolean> listner, String filename, ProgressDialog pd) {
             this.listner = listner;
@@ -237,7 +251,7 @@ public class UploadFilesActivity extends BaseActivity
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             pd.dismiss();
-            listner.onDriveTaskComplete(aBoolean);
+            listner.onDriveTaskComplete(aBoolean, isApplicationStatusChanged);
         }
 
         private Boolean updateStudentDetails() {
@@ -326,6 +340,7 @@ public class UploadFilesActivity extends BaseActivity
                 application.setStatus("coordinator-verification-required");
                 if (saveApplication(application)) {
 //                    proceedToStudentNavigationPage();
+                    isApplicationStatusChanged = Boolean.TRUE;
                 }
             }
         }

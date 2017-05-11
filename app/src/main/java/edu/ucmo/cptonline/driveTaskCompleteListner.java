@@ -5,5 +5,5 @@ package edu.ucmo.cptonline;
  */
 
 public interface driveTaskCompleteListner<T> {
-    public void onDriveTaskComplete(T result);
+    public void onDriveTaskComplete(T result, Boolean statusChange);
 }
