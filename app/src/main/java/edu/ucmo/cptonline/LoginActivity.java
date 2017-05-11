@@ -347,10 +347,12 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 
         private final String mEmail;
         private final String mPassword;
+        private Long mStudentID;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+            mStudentID = Long.valueOf(0);
         }
 
         @Override
@@ -381,6 +383,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
                 }
 //                    if (BCrypt.checkpw(mPassword, loginObj.getPassword())) {
                 if (passwordVerify(mPassword,loginObj.getPassword())) {
+                    mStudentID = loginObj.getId();
                     return Boolean.TRUE;
                 } else {
 //                    Toast.makeText(getApplicationContext(),"login failure", Toast.LENGTH_LONG).show();
@@ -405,6 +408,7 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
 //                Toast.makeText(getApplicationContext(),"login success", Toast.LENGTH_LONG).show();
                 saveToSharedPreferences("email",mEmail);
                 saveToSharedPreferences("password", mPassword);
+                saveToSharedPreferences("student700id", mStudentID);
                 proceedToNavigation();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -422,6 +426,13 @@ public class LoginActivity extends BaseActivity implements LoaderCallbacks<Curso
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(key, value);
+            editor.commit();
+        }
+
+        public void saveToSharedPreferences(String key, Long value) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putLong(key, value);
             editor.commit();
         }
 

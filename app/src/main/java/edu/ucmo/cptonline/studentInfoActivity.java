@@ -97,6 +97,8 @@ public class studentInfoActivity extends BaseActivity {
                 studentInDB = students[0];
                 displayStudent(studentInDB);
                 setupUI(findViewById(R.id.info_layout), false);
+            } else {
+                displayDefaults();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -271,6 +273,20 @@ public class studentInfoActivity extends BaseActivity {
 
         ((EditText)findViewById(R.id.info_company_supervisorphone)).setText((student.getCptsupervisorphno() != null)
                 ? student.getCptsupervisorphno() : "");
+    }
+
+    public void displayDefaults() {
+
+        ((EditText)findViewById(R.id.info_student_id)).setText(Long.toString(getSharedPreferenceValueLong("student700id")));
+
+        ((EditText)findViewById(R.id.info_student_major)).setText("CIS - IT");
+
+        ((EditText)findViewById(R.id.info_cpt_instructor)).setText("Dr. Sam Ramanujan");
+
+        ((EditText)findViewById(R.id.info_cpt_credithours)).setText("3");
+
+        Button edit = (Button) findViewById(R.id.btnEditStudentInfo);
+        edit.setText("Save");
 
     }
 
@@ -288,7 +304,13 @@ public class studentInfoActivity extends BaseActivity {
     }
 
     private Students getStudentDetails() {
-        Students student = studentInDB;
+
+        Students student;
+        if(studentInDB != null) {
+            student = studentInDB;
+        } else {
+            student = new Students();
+        }
 
         // Fill student information
 
@@ -389,6 +411,11 @@ public class studentInfoActivity extends BaseActivity {
 
     }
 
+    private Long getSharedPreferenceValueLong(String key) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        return preferences.getLong(key, 0);
+    }
+
     public class saveTask extends AsyncTask<Void, Void, Boolean> {
 
         private Students student;
@@ -437,9 +464,10 @@ public class studentInfoActivity extends BaseActivity {
             application.setStudentid(student.getId());
             application.setName(student.getName());
             application.setDateapplied(today);
-            if (!student.getInternshipform().isEmpty() && !student.getOfferletter().isEmpty()
-                    && !student.getCentraldegree().isEmpty()
-                    && !student.getDirectorylink().isEmpty()) {
+            if (student.getDirectorylink() != null && !student.getDirectorylink().equals("")
+                    && student.getInternshipform() != null && !student.getInternshipform().equals("")
+                    && student.getCentraldegree() != null && !student.getCentraldegree().equals("")
+                    && student.getOfferletter() != null && !student.getOfferletter().equals("")) {
                 if (shareDriveFolder()) {
                     application.setStatus("coordinator-verification-required");
                 } else {

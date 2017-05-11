@@ -1,7 +1,9 @@
 package edu.ucmo.cptonline;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -75,6 +77,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),"Registration successful", Toast.LENGTH_LONG).show();
                 saveToSharedPreferences("email",emailStr);
                 saveToSharedPreferences("password", passwordStr);
+                proceedToLogin();
             } else {
                 Toast.makeText(getApplicationContext(),"Registration unsuccessful", Toast.LENGTH_LONG).show();
             }
@@ -82,8 +85,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void saveToSharedPreferences(String key, String value) {
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = prefs.edit();
         editor.putString(key, value);
         editor.commit();
     }
@@ -124,6 +127,13 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
         return result;
+    }
+
+    private void proceedToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
 }
